@@ -1,0 +1,29 @@
+{
+  "name": "YuQue-Extension",
+  "description": "A tool for YuQue",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "main.html",
+    "default_icon": {
+      "16": "/images/yuque.png",
+      "32": "/images/yuque.png",
+      "48": "/images/yuque.png",
+      "128": "/images/yuque.png"
+    }
+  },
+  "icons": {
+    "16": "/images/yuque.png",
+      "32": "/images/yuque.png",
+      "48": "/images/yuque.png",
+      "128": "/images/yuque.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ]
+}
