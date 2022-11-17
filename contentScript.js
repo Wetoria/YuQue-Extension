@@ -10,9 +10,12 @@ document.onfullscreenchange = () => {
   }
 }
 
+let lastVideoTarget
+
 document.onkeydown = (e) => {
   let parent = document.querySelector('.ne-focused')
-  let target = parent && parent.querySelector('video')
+  let target = parent && parent.querySelector('video') || lastVideoTarget
+  lastVideoTarget = target
 
   const videoBack = () => {
     if (!target) return;
