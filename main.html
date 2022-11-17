@@ -5,8 +5,9 @@
   <meta charset="utf-8">
   <style>
     body {
-      width: 200px;
+      width: 400px;
       height: max-content;
+      font-size: 16px;
     }
 
     .main {
@@ -22,7 +23,8 @@
     .function-container .item {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      margin-bottom: 8px;
+      width: 100%;
     }
 
     input[type='checkbox'].switch {
@@ -62,11 +64,55 @@
       left: 55%;
       top: 2px;
     }
-    .label-outline-width {
-      width: 150px;
+    .function-container .item .label {
+      width: 50%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 5px;
     }
-    #outlineWidthInput {
-      width: 80px;
+
+    .function-container .item .item-input-area {
+      width: 30%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .function-container .item .suffix-area {
+      width: 20%;
+      display: flex;
+      align-items: center;
+    }
+    input[type=number] {
+      width: calc(100% - 44px - 10px);
+      margin: 0 5px;
+      text-align: center;
+    }
+    .plus-btn,
+    .minus-btn {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .plus-btn span,
+    .minus-btn span {
+      width:  16px;
+      height: 16px;
+      line-height: 16px;
+      font-size: 14px;
+      border-radius: 10px;
+      border: 1.5px solid;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .plus-btn span:hover,
+    .minus-btn span:hover {
+      color:rgb(19, 206, 102);
+      border-color: rgb(19, 206, 102);
     }
   </style>
 </head>
@@ -76,15 +122,166 @@
     <h1>语雀扩展插件 v0.2</h1>
     <hr />
     <div class="function-container">
+
       <div class="item">
-        <label>大纲标题缩略开关：</label>
-        <input type="checkbox" class="switch" id="outlineThumbnailSwitcher" />
+        <label class="label">大纲标题缩略开关：</label>
+        <div class="item-input-area">
+          <input type="checkbox" class="switch" id="outlineThumbnailSwitcher" />
+        </div>
+        <div class="suffix-area">
+        </div>
       </div>
+
       <div class="item">
-        <label class="label-outline-width">大纲区域宽度：</label>
-        <input type="number" id="outlineWidthInput" />
+        <label class="label">大纲区域宽度：</label>
+        <div class="item-input-area">
+          <span class="plus-btn">
+            <span
+              class="plus-icon"
+              data-target="catalogAreaWidth"
+              data-step="10"
+              data-min="280"
+              data-max="900"
+            >+</span>
+          </span>
+          <input type="number" id="catalogAreaWidth" />
+          <span class="minus-btn">
+            <span
+              class="minus-icon"
+              data-target="catalogAreaWidth"
+              data-step="10"
+              data-min="280"
+              data-max="900"
+            >-</span>
+          </span>
+        </div>
+        <div class="suffix-area">
+        </div>
+      </div>
+
+      <div class="item step-item">
+        <label class="label step-label">播放速度，每次加：</label>
+        <div class="item-input-area">
+          <span class="plus-btn">
+            <span 
+              class="plus-icon" 
+              data-target="speedupStep"
+              data-step="0.25"
+              data-min="0.1"
+              data-max="16"
+            >+</span>
+          </span>
+          <input type="number" id="speedupStep" />
+          <span class="minus-btn">
+            <span 
+              class="minus-icon"
+              data-target="speedupStep"
+              data-step="0.25"
+              data-min="0.1"
+              data-max="16"
+            >-</span>
+          </span>
+        </div>
+        <div class="suffix-area">
+          <label class="label step-unit">倍</label>
+        </div>
+      </div>
+
+      <div class="item step-item">
+        <label class="label step-label">播放速度，每次减：</label>
+        <div class="item-input-area">
+          <span class="plus-btn">
+            <span 
+              class="plus-icon" 
+              data-target="speedcutStep"
+              data-step="0.25"
+              data-min="0.1"
+              data-max="16"
+            >+</span>
+          </span>
+          <input type="number" id="speedcutStep" />
+          <span class="minus-btn">
+            <span
+              class="minus-icon" 
+              data-target="speedcutStep"
+              data-step="0.25"
+              data-min="0.1"
+              data-max="16"
+            >-</span>
+          </span>
+        </div>
+        <div class="suffix-area">
+          <label class="label step-unit">倍</label>
+        </div>
+      </div>
+
+      <div class="item step-item">
+        <label class="label step-label">前进快捷键，每次前进：</label>
+        <div class="item-input-area">
+          <span class="plus-btn">
+            <span 
+              class="plus-icon" 
+              data-target="forwardStep"
+              data-step="1"
+              data-min="1"
+              data-max="30"
+            >+</span>
+          </span>
+          <input type="number" id="forwardStep" />
+          <span class="minus-btn">
+            <span 
+              class="minus-icon"
+              data-target="forwardStep"
+              data-step="1"
+              data-min="1"
+              data-max="30"
+            >-</span>
+          </span>
+        </div>
+        <div class="suffix-area">
+          <label class="label step-unit">秒</label>
+        </div>
+      </div>
+
+      <div class="item step-item">
+        <label class="label step-label">后退快捷键，每次后退：</label>
+        <div class="item-input-area">
+          <span class="plus-btn">
+            <span 
+              class="plus-icon" 
+              data-target="backwardStep"
+              data-step="1"
+              data-min="1"
+              data-max="30"
+            >+</span>
+          </span>
+          <input type="number" id="backwardStep" />
+          <span class="minus-btn">
+            <span 
+              class="minus-icon" 
+              data-target="backwardStep"
+              data-step="1"
+              data-min="1"
+              data-max="30"
+            >-</span>
+          </span>
+        </div>
+        <div class="suffix-area">
+          <label class="label step-unit">秒</label>
+        </div>
       </div>
     </div>
+    <hr />
+    <h2>快捷键：</h2>
+    <ul>
+      <li>播放/暂停：空格（Space）</li>
+      <li>快进：方向键右（➡️）</li>
+      <li>后退：方向键左（⬅️）</li>
+      <li>加速播放：]</li>
+      <li>减速播放：[</li>
+      <li>重置播放速度：\</li>
+    </ul>
+
   </div>
   <script src="main.js"></script>
 

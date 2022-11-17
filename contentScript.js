@@ -11,67 +11,140 @@ document.onfullscreenchange = () => {
 }
 
 let lastVideoTarget
+const SIMPLEST_FRONTEND = 'simplestFrontend'
+function setStorage(key, value) {
+  chrome.storage.sync.set({ [key]: value });
+}
+function getStorage(key, fn) {
+  chrome.storage.sync.get(key, ({ [key]: value }) => {
+    fn(value)
+  })
+}
 
-document.onkeydown = (e) => {
+function getTarget() {
   let parent = document.querySelector('.ne-focused')
   let target = parent && parent.querySelector('video') || lastVideoTarget
   lastVideoTarget = target
+  return target
+}
 
-  const videoBack = () => {
-    if (!target) return;
-    const step = 1; // 单位秒
-    target.currentTime -= step
+function baseFunc(fn) {
+  return (...args) => {
+    let target = getTarget();
+    if (!target) return
+    fn(target, ...args)
   }
+}
 
-  const videoForward = () => {
-    if (!target) return;
-    const step = 1; // 单位秒
-    target.currentTime += step
+const videoBack = baseFunc((target) => {
+  getStorage('backwardStep', (value) => {
+    target.currentTime -= Number(value)
+  })
+})
+
+const videoForward = baseFunc((target) => {
+  getStorage('forwardStep', (value) => {
+    target.currentTime += Number(value)
+  })
+})
+const videoPlayAndPause = baseFunc((target, event) => {
+  if (target.paused) {
+    target.play()
+  } else if (target.played) {
+    target.pause()
   }
-  const videoPlayAndPause = () => {
-    if (!target) return;
+  event.preventDefault();
+})
 
-    if (target.paused) {
-      target.play()
-    } else if (target.played) {
-      target.pause()
+const videoSpeedUp = baseFunc((target) => {
+  getStorage('speedupStep', (value) => {
+    let newValue = target.playbackRate + Number(value)
+    if (newValue >= 16) {
+      newValue = 16
     }
-    e.preventDefault();
-  }
+    target.playbackRate = newValue
+  })
+})
 
-  const videoSpeedUp = () => {
-    if (!target) return;
+const videoSpeedCut = baseFunc((target) => {
+  getStorage('speedcutStep', (value) => {
+    let newValue = target.playbackRate - Number(value)
+    if (newValue <= 0) {
+      newValue = 0.1
+    }
+    target.playbackRate = newValue
+  })
+})
 
-    let step = 0.1
-    target.playbackRate += step
-  }
+const resetSpeed = baseFunc((target) => {
+  target.playbackRate = 1
+})
 
-  const videoSpeedCut = () => {
-    if (!target) return;
 
-    let step = 0.1
-    target.playbackRate -= step
-  }
-
+document.onkeydown = (event) => {
+  
   const {
     code
-  } = e;
+  } = event;
   switch (code) {
     case 'ArrowLeft':
-      videoBack();
+      videoBack(event);
       break;
     case 'ArrowRight':
-      videoForward();
+      videoForward(event);
       break;
     case 'Space':
-      videoPlayAndPause();
+      videoPlayAndPause(event);
       break;
     case 'BracketRight':
-      videoSpeedUp();
+      videoSpeedUp(event);
       break;
     case 'BracketLeft':
-      videoSpeedCut();
+      videoSpeedCut(event);
+      break;
+    case 'Backslash':
+      resetSpeed(event);
       break;
   }
 }
-console.log('Enabled YuQue extension. Includes Video control')
+
+window.onload = () => {
+    const messageDom = document.createElement('span')
+    messageDom.innerHTML = '【语雀插件】视频控制功能加载成功'
+    messageDom.style = `
+      position: fixed;
+      background: #16AF58;
+      padding: 10px 20px;
+      z-index: 999;
+      transition: all 0.5s;
+      border: 1px solid #16AF58;
+      color: white;
+      border-radius: 10px;
+      font-weight: 500;
+    `
+
+    // const topValue = '20px'
+    // const rightValue = '-154px'
+
+    const topValue = '-44px'
+    const rightValue = 'calc(50% - 77px)'
+
+    messageDom.style.top = topValue
+    messageDom.style.right = rightValue
+
+    document.body.append(messageDom)
+
+    getStorage('catalogAreaWidth', (value) => {
+      document.querySelector('.ne-toc-normal-view').style.width = value + 'px'
+    })
+
+    setTimeout(() => {
+      // messageDom.style.right = '20px'
+      messageDom.style.top = '20px'
+
+      setTimeout(() => {
+        // messageDom.style.right = rightValue
+        messageDom.style.top = topValue
+      }, 3000)
+    })
+}
