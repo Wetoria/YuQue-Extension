@@ -57,7 +57,11 @@ outlineWidthInput.addEventListener('input', async (event) => {
 });
 
 
-function bindInputEvents(target, defaultValue = 1) {
+function bindInputEvents(target, {
+  defaultValue = 1,
+  min = 1,
+  max = 1,
+} = {}) {
   const targetInput = document.getElementById(`${target}`);
   document.addEventListener('DOMContentLoaded', function () {
     chrome.storage.sync.get(target, ({
@@ -72,15 +76,22 @@ function bindInputEvents(target, defaultValue = 1) {
   });
 
   targetInput.addEventListener('input', async (event) => {
-    const value = event.target.value
+    let value = event.target.value
+    if (value >= max) {
+      value = max
+    }
+    if (value <= min) {
+      value = min
+    }
+    event.target.value = value
     setValue(target, value)
   });
 }
 
-bindInputEvents('forwardStep')
-bindInputEvents('backwardStep')
-bindInputEvents('speedupStep', 0.1)
-bindInputEvents('speedcutStep', 0.1)
+bindInputEvents('forwardStep', { defaultValue: 1, min: 1, max: 30 })
+bindInputEvents('backwardStep', { defaultValue: 1, min: 1, max: 30 })
+bindInputEvents('speedupStep', { defaultValue: 0.1, min: 0.1, max: 16 })
+bindInputEvents('speedcutStep', { defaultValue: 0.1, min: 0.1, max: 16 })
 
 
 
