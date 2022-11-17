@@ -21,6 +21,12 @@
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://*.yuque.com/wetoria/simplest-frontend/*"],
+      "js": ["contentScript.js"]
+    }
+  ],
   "permissions": [
     "storage",
     "activeTab",
