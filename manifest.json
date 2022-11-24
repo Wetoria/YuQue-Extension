@@ -24,7 +24,12 @@
   "content_scripts": [
     {
       "matches": ["https://*.yuque.com/*"],
-      "js": ["contentScript.js"]
+      "js": [
+        "/tools/core.js",
+        "/tools/Message.js",
+        "/tools/VideoControl.js",
+        "/tools/contentScript.js"
+      ]
     }
   ],
   "permissions": [
