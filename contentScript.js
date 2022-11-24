@@ -76,7 +76,6 @@ document.onfullscreenchange = () => {
 }
 
 let lastVideoTarget
-const SIMPLEST_FRONTEND = 'simplestFrontend'
 function setStorage(key, value) {
   chrome.storage.sync.set({ [key]: value });
 }
