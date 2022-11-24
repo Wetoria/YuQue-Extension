@@ -1,4 +1,3 @@
-const dom = document.querySelector('#outlineThumbnailSwitcher');
 
 function setValue(key, value) {
   chrome.storage.sync.set({
@@ -6,37 +5,47 @@ function setValue(key, value) {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-
-  dom.addEventListener('change', async () => {
-    let [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true
-    });
-    chrome.scripting.executeScript({
-      target: {
-        tabId: tab.id
-      },
-      function: (checked) => {
-        document.querySelectorAll('.ne-toc-normal-view .ne-toc-item').forEach((item) => {
-          item.style.height = checked ? 'unset' : '22px';
-          item.style.whiteSpace = checked ? 'unset' : 'nowrap';
-        })
-      },
-      args: [dom.checked],
-    });
+const outlineThumbnailSwitcher = document.querySelector('#outlineThumbnailSwitcher');
+outlineThumbnailSwitcher.addEventListener('change', async () => {
+  let [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  });
+  setValue('tocSwitchChecked', outlineThumbnailSwitcher.checked)
+  chrome.scripting.executeScript({
+    target: {
+      tabId: tab.id
+    },
+    function: (checked) => {
+      document.querySelectorAll('.ne-toc-normal-view .ne-toc-item').forEach((item) => {
+        item.style.height = checked ? 'unset' : '22px';
+        item.style.whiteSpace = checked ? 'unset' : 'nowrap';
+      })
+    },
+    args: [outlineThumbnailSwitcher.checked],
   });
 });
 
 const outlineWidthInput = document.getElementById('catalogAreaWidth');
 document.addEventListener('DOMContentLoaded', function () {
-  chrome.storage.sync.get("catalogAreaWidth", ({
-    catalogAreaWidth
+  const needInitValues = [
+    'catalogAreaWidth',
+    'tocSwitchChecked',
+  ]
+  chrome.storage.sync.get(needInitValues, ({
+    catalogAreaWidth,
+    tocSwitchChecked,
   }) => {
     outlineWidthInput.value = catalogAreaWidth;
+    outlineThumbnailSwitcher.checked = Boolean(tocSwitchChecked)
   })
 });
 
+function changeTocWidth(width) {
+  const tocArea = document.querySelector('.ne-toc-normal-view')
+  if (tocArea)
+  tocArea.style.width = width + 'px'
+}
 
 outlineWidthInput.addEventListener('input', async (event) => {
   const value = event.target.value
@@ -49,9 +58,7 @@ outlineWidthInput.addEventListener('input', async (event) => {
     target: {
       tabId: tab.id
     },
-    function: (width) => {
-      document.querySelector('.ne-toc-normal-view').style.width = width + 'px'
-    },
+    function: changeTocWidth,
     args: [value],
   });
 });
@@ -108,7 +115,6 @@ function addBtnEventListener(btns, negative) {
       const maxValue = Number(event.target.getAttribute('data-max'))
       const targetInput = document.getElementById(targetName)
       targetInput.value = Number(targetInput.value) + (negative ? -step : step)
-      console.log('value is ', targetInput.value)
       if (targetInput.value < minValue) {
         targetInput.value = minValue
       }
@@ -126,9 +132,7 @@ function addBtnEventListener(btns, negative) {
           target: {
             tabId: tab.id
           },
-          function: (width) => {
-            document.querySelector('.ne-toc-normal-view').style.width = width + 'px'
-          },
+          function: changeTocWidth,
           args: [targetInput.value],
         });
       }

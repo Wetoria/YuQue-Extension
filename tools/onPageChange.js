@@ -5,6 +5,12 @@ const changeTocAreaWidth = () => {
       tocArea.style.width = value + 'px'
     }
   })
+  vipYQ.getStorage('tocSwitchChecked', (checked) => {
+    document.querySelectorAll('.ne-toc-normal-view .ne-toc-item').forEach((item) => {
+      item.style.height = checked ? 'unset' : '22px';
+      item.style.whiteSpace = checked ? 'unset' : 'nowrap';
+    })
+  })
 }
 
 const autoExecute = () => {
