@@ -28,7 +28,7 @@
         "/tools/core.js",
         "/tools/Message.js",
         "/tools/VideoControl.js",
-        "/tools/contentScript.js"
+        "/tools/onPageChange.js"
       ]
     }
   ],
