@@ -16,5 +16,4 @@ const defaultValues = {
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.set(defaultValues);
-  console.log('Default outlineWidth  set to ', outlineWidth);
 });
