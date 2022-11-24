@@ -98,9 +98,9 @@ let recordScrollTop = () => {
 const addFullscreenBtnListener = () => {
   const btns = document.querySelectorAll('[class*=Fullscreen-module_button]')
   btns.forEach((item) => {
-    item.onclick = () => {
+    item.addEventListener('click', () => {
       recordScrollTop()
-    }
+    })
   })
 }
 document.onfullscreenchange = () => {
