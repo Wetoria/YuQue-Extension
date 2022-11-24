@@ -135,7 +135,10 @@ window.onload = () => {
     document.body.append(messageDom)
 
     getStorage('catalogAreaWidth', (value) => {
-      document.querySelector('.ne-toc-normal-view').style.width = value + 'px'
+      const tocArea = document.querySelector('.ne-toc-normal-view')
+      if (tocArea) {
+        tocArea.style.width = value + 'px'
+      }
     })
 
     setTimeout(() => {
